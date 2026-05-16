@@ -137,6 +137,12 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:none}
 .vb video{width:100%;height:100%;object-fit:contain;display:block}
 .vc{position:absolute;bottom:9px;left:10px;font-family:var(--fu);font-size:13px;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.75);background:rgba(0,0,0,.5);backdrop-filter:blur(5px);padding:4px 11px;border-radius:5px}
 
+/* ─── STOPWATCH ───────────────────────────── */
+@keyframes sw-pulse{0%{box-shadow:0 0 0 0 rgba(247,143,26,.55)}70%{box-shadow:0 0 0 18px rgba(247,143,26,0)}100%{box-shadow:0 0 0 0 rgba(247,143,26,0)}}
+.sw-done{color:var(--orange)!important;animation:sw-pulse 1s ease-out 3}
+.sw-done-badge{opacity:0;transform:translateY(6px);transition:opacity .4s .15s ease,transform .4s .15s ease}
+.sw-done-badge.show{opacity:1;transform:translateY(0)}
+
 /* ─── QUOTE ───────────────────────────────── */
 .quote{font-family:var(--fd);font-size:clamp(20px,2.4vw,30px);font-style:italic;line-height:1.5;color:var(--head);border-left:3px solid var(--orange);padding-left:22px}
 .quote.li{color:rgba(255,255,255,.9)}
@@ -344,9 +350,27 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:none}
     <div class="wm li">oogwereld</div>
   </div>
 
-  <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:16px;padding:70px 24px 24px;">
-    <video src="IMG_4062.mp4" autoplay loop muted playsinline preload="auto" style="height:100%;width:auto;border-radius:12px;"></video>
-    <video src="IMG_4066.mp4" autoplay loop muted playsinline preload="auto" style="height:100%;width:auto;border-radius:12px;"></video>
+  <div style="position:absolute;inset:0;display:flex;gap:20px;padding:64px 32px 20px;">
+
+    <!-- LEFT: handmatig -->
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:10px;min-width:0;">
+      <div style="font-family:var(--fu);font-size:13px;letter-spacing:.13em;text-transform:uppercase;color:rgba(255,255,255,.45);">Handmatig</div>
+      <video src="IMG_4062.mp4" autoplay loop muted playsinline preload="auto" style="flex:1;min-height:0;width:auto;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.6);"></video>
+      <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:12px 28px;text-align:center;">
+        <div id="sw-left" style="font-family:var(--fu);font-size:clamp(28px,3.5vw,52px);color:rgba(220,220,220,.9);letter-spacing:-.01em;font-variant-numeric:tabular-nums;white-space:nowrap;">00:00.00</div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Claude MCP -->
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:10px;min-width:0;">
+      <div style="font-family:var(--fu);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.45);">Bestellijst invoeren met Claude MCP</div>
+      <video src="IMG_4066.mp4" autoplay loop muted playsinline preload="auto" style="flex:1;min-height:0;width:auto;border-radius:14px;box-shadow:0 8px 32px rgba(0,0,0,.6);"></video>
+      <div id="sw-right-wrap" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:12px 28px;text-align:center;transition:border-color .4s,background .4s;">
+        <div id="sw-right" style="font-family:var(--fu);font-size:clamp(28px,3.5vw,52px);color:rgba(220,220,220,.9);letter-spacing:-.01em;font-variant-numeric:tabular-nums;white-space:nowrap;transition:color .4s;">00:00.00</div>
+        <div id="sw-right-badge" class="sw-done-badge" style="font-family:var(--fu);font-size:14px;letter-spacing:.1em;color:var(--orange);margin-top:4px;">✓ &nbsp;45 seconden — klaar</div>
+      </div>
+    </div>
+
   </div>
 
 </section>
@@ -859,10 +883,57 @@ const hint=document.getElementById('hint');
 const cur=document.getElementById('cur');
 let n=0,busy=false;
 
+/* ── Video-slide stopwatches ── */
+const vidSlide=document.getElementById('slide-videos');
+const swL=document.getElementById('sw-left');
+const swR=document.getElementById('sw-right');
+const swRWrap=document.getElementById('sw-right-wrap');
+const swRBadge=document.getElementById('sw-right-badge');
+const SW_R=45,SW_L=192.512;
+let sw2T0=null,sw2Raf=null,sw2LDone=false,sw2RDone=false;
+
+function sw2Fmt(t){const cs=Math.floor(t*100),m=Math.floor(cs/6000),s=Math.floor((cs%6000)/100),c=cs%100;return`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}.${String(c).padStart(2,'0')}`;}
+
+function sw2Tick(ts){
+  if(sw2T0===null)sw2T0=ts;
+  const e=(ts-sw2T0)/1000;
+  if(!sw2RDone){
+    if(e>=SW_R){
+      sw2RDone=true;
+      swR.textContent=sw2Fmt(SW_R);
+      swR.classList.add('sw-done');
+      swRWrap.style.borderColor='rgba(247,143,26,.6)';
+      swRWrap.style.background='rgba(247,143,26,.08)';
+      swRBadge.classList.add('show');
+    } else { swR.textContent=sw2Fmt(e); }
+  }
+  if(!sw2LDone){
+    if(e>=SW_L){sw2LDone=true;swL.textContent=sw2Fmt(SW_L);}
+    else{swL.textContent=sw2Fmt(e);}
+  }
+  if(!sw2LDone||!sw2RDone)sw2Raf=requestAnimationFrame(sw2Tick);
+}
+
+function sw2Begin(){
+  if(sw2Raf)cancelAnimationFrame(sw2Raf);
+  sw2T0=null;sw2LDone=false;sw2RDone=false;
+  swL.textContent='00:00.00';
+  swR.textContent='00:00.00';
+  swR.classList.remove('sw-done');
+  swRWrap.style.borderColor='';swRWrap.style.background='';
+  swRBadge.classList.remove('show');
+  sw2Raf=requestAnimationFrame(sw2Tick);
+}
+
+function sw2Stop(){
+  if(sw2Raf){cancelAnimationFrame(sw2Raf);sw2Raf=null;}
+}
+
 function go(t){
   if(busy||t===n||t<0||t>=slides.length)return;
   busy=true;
   const p=slides[n],x=slides[t];
+  if(p===vidSlide)sw2Stop();
   p.classList.remove('active');p.classList.add('exit');
   x.style.transform=t>n?'translateX(52px)':'translateX(-52px)';
   x.style.opacity='0';
@@ -872,6 +943,7 @@ function go(t){
   setTimeout(()=>{
     p.classList.remove('exit');busy=false;
     x.querySelectorAll('video').forEach(v=>{v.currentTime=0;v.play().catch(()=>{});});
+    if(x===vidSlide)sw2Begin();
   },500);
 }
 
