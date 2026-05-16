@@ -335,45 +335,18 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:none}
 </section>
 
 <!-- ══════════════════════════════
-  SLIDE 3 · VIDEO — STOPWATCH
+  SLIDE 3 · VIDEO — BOUTIQUE
 ══════════════════════════════ -->
-<section class="slide bg-dark" data-bg="dark" id="slide-stopwatch">
+<section class="slide bg-dark" data-bg="dark" id="slide-videos">
 
-  <!-- Top bar — floats over the video -->
   <div style="position:absolute;top:0;left:0;right:0;z-index:10;display:flex;justify-content:space-between;align-items:flex-start;padding:28px 40px 0;">
     <div class="lbl li">D · Desire &nbsp;·&nbsp; Elke minuut telt</div>
     <div class="wm li">oogwereld</div>
   </div>
 
-  <!-- Fullscreen: video | stopwatch | video — 1:1.8:1 ratio -->
-  <!-- Left video: 0% → 26.3% -->
-  <div style="position:absolute;top:0;bottom:0;left:0;width:26.3%;overflow:hidden;">
-    <video src="IMG_4062.mp4" autoplay loop muted playsinline preload="auto" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;"></video>
-    <div class="vc">Oogwereld boutique</div>
-  </div>
-
-  <!-- Stopwatch center: 26.3% → 73.7% -->
-  <div id="sw-wrap" style="position:absolute;top:0;bottom:0;left:26.3%;right:26.3%;background:#0a0a0a;display:flex;align-items:center;justify-content:center;z-index:1;">
-    <div style="display:flex;flex-direction:column;align-items:center;gap:clamp(8px,1.5vh,20px);">
-      <div style="font-family:var(--fu);font-size:clamp(12px,1.1vw,15px);letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.45);">tijdsduur handmatige verwerking</div>
-      <div style="background:rgba(8,8,8,1);border-radius:22px;padding:clamp(10px,2vh,26px) clamp(18px,3vw,50px);border:1.5px solid rgba(55,55,55,1);box-shadow:0 8px 40px rgba(0,0,0,.8);">
-        <div id="sw-time" style="font-family:var(--fu);font-size:clamp(44px,6.5vw,100px);color:rgba(230,230,230,1);letter-spacing:-.01em;font-variant-numeric:tabular-nums;white-space:nowrap;line-height:1;">00:00.00</div>
-      </div>
-    </div>
-
-    <!-- Freeze overlay -->
-    <div id="sw-overlay" style="position:absolute;inset:0;background:rgba(0,0,0,0);display:flex;align-items:center;justify-content:center;transition:background .6s ease;pointer-events:none;">
-      <div id="sw-msg" style="opacity:0;transform:scale(.88);transition:opacity .5s .2s ease,transform .5s .2s ease;text-align:center;padding:0 16px;">
-        <div style="font-family:var(--fd);font-size:clamp(22px,3vw,42px);color:var(--white);line-height:1.1;">Hier stopt het.</div>
-        <div style="font-family:var(--fd);font-size:clamp(22px,3vw,42px);color:var(--orange);font-style:italic;line-height:1.1;">Hier start AI.</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Right video: 73.7% → 100% -->
-  <div style="position:absolute;top:0;bottom:0;right:0;width:26.3%;overflow:hidden;">
-    <video src="IMG_4066.mp4" autoplay loop muted playsinline preload="auto" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;"></video>
-    <div class="vc">Oogwereld boutique</div>
+  <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:16px;padding:70px 24px 24px;">
+    <video src="IMG_4062.mp4" autoplay loop muted playsinline preload="auto" style="flex:1;min-width:0;border-radius:12px;"></video>
+    <video src="IMG_4066.mp4" autoplay loop muted playsinline preload="auto" style="flex:1;min-width:0;border-radius:12px;"></video>
   </div>
 
 </section>
@@ -886,56 +859,10 @@ const hint=document.getElementById('hint');
 const cur=document.getElementById('cur');
 let n=0,busy=false;
 
-const swSlide=document.getElementById('slide-stopwatch');
-const swSlideIdx=slides.indexOf(swSlide);
-const swOverlay=document.getElementById('sw-overlay');
-const swMsg=document.getElementById('sw-msg');
-const swTimeEl=document.getElementById('sw-time');
-let swT0=null,swRaf=null,swDone=false;
-
-function swRender(t){
-  const cs=Math.floor(t*100);
-  const m=Math.floor(cs/6000);
-  const s=Math.floor((cs%6000)/100);
-  const c=cs%100;
-  swTimeEl.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}.${String(c).padStart(2,'0')}`;
-}
-
-function swTick(ts){
-  if(swT0===null)swT0=ts;
-  const elapsed=(ts-swT0)/1000;
-  if(elapsed>=40&&!swDone){
-    swDone=true;swRender(40);
-    swOverlay.style.background='rgba(0,0,0,0.65)';
-    swMsg.style.opacity='1';swMsg.style.transform='scale(1)';
-    return;
-  }
-  swRender(elapsed);
-  swRaf=requestAnimationFrame(swTick);
-}
-
-function beginSw(){
-  if(swRaf)cancelAnimationFrame(swRaf);
-  swT0=null;swDone=false;swRender(0);
-  swRaf=requestAnimationFrame(swTick);
-}
-
-function stopSw(){
-  if(swRaf){cancelAnimationFrame(swRaf);swRaf=null;}
-  swT0=null;swDone=false;
-}
-
-function resetSwOverlay(){
-  swOverlay.style.background='rgba(0,0,0,0)';
-  swMsg.style.opacity='0';
-  swMsg.style.transform='scale(.88)';
-}
-
 function go(t){
   if(busy||t===n||t<0||t>=slides.length)return;
   busy=true;
   const p=slides[n],x=slides[t];
-  if(p===swSlide)stopSw();
   p.classList.remove('active');p.classList.add('exit');
   x.style.transform=t>n?'translateX(52px)':'translateX(-52px)';
   x.style.opacity='0';
@@ -945,7 +872,6 @@ function go(t){
   setTimeout(()=>{
     p.classList.remove('exit');busy=false;
     x.querySelectorAll('video').forEach(v=>{v.currentTime=0;v.play().catch(()=>{});});
-    if(t===swSlideIdx){resetSwOverlay();setTimeout(beginSw,3000);}
   },500);
 }
 
