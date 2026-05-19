@@ -173,7 +173,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:none}
     <div class="wm">oogwereld</div>
   </div>
   <div class="mid" style="gap:18px;justify-content:center;">
-    <div class="lbl or">A · Attention &nbsp;·&nbsp; Pilotvoorstel Oogwereld Groep</div>
+    <div class="lbl or">Pilotvoorstel Oogwereld Groep</div>
     <h1 class="disp xl">
       Artificial intelligence<br>
       binnen Oogwereld —<br>
@@ -302,7 +302,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:none}
 <section class="slide bg-dark" data-bg="dark">
 <div class="wrap">
   <div class="top">
-    <div class="lbl li">I · Interest &nbsp;·&nbsp; Het probleem</div>
+    <div class="lbl li">Het probleem</div>
     <div class="wm li">oogwereld</div>
   </div>
   <div class="mid" style="gap:26px;">
@@ -341,12 +341,102 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:none}
 </section>
 
 <!-- ══════════════════════════════
+  SLIDE · HET EXPERIMENT
+══════════════════════════════ -->
+<section class="slide bg-dark" data-bg="dark">
+<div class="wrap">
+  <div class="top">
+    <div class="lbl li">Het experiment</div>
+    <div class="wm li">oogwereld</div>
+  </div>
+  <div class="mid" style="gap:20px;justify-content:flex-start;padding-top:4px;">
+    <h2 class="disp li">Eén uur trainen.<br><em>Dan live testen in Apollo.</em></h2>
+    <div style="display:grid;grid-template-columns:1fr 1.4fr;gap:20px;flex:1;min-height:0;align-items:stretch;">
+
+      <!-- Left: two info cards -->
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:10px;flex:1;">
+          <div style="font-family:var(--fb);font-size:46px;font-weight:700;color:var(--orange);line-height:1;">~1 uur</div>
+          <div style="font-family:var(--fb);font-size:16px;font-weight:700;color:var(--white);">Training</div>
+          <div style="font-family:var(--fu);font-size:14px;color:rgba(255,255,255,.6);line-height:1.5;">We hebben Claude AI uitgelegd hoe Apollo werkt — het systeem voor bestellingen en klantbeheer.</div>
+        </div>
+        <div style="background:rgba(247,143,26,.12);border:1.5px solid rgba(247,143,26,.4);border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:10px;flex:1;box-shadow:0 0 32px rgba(247,143,26,.15);">
+          <div style="font-family:var(--fb);font-size:46px;font-weight:700;color:var(--orange);line-height:1;">Live</div>
+          <div style="font-family:var(--fb);font-size:16px;font-weight:700;color:var(--white);">Testen in Apollo</div>
+          <div style="font-family:var(--fu);font-size:14px;color:rgba(255,255,255,.6);line-height:1.5;">Claude voerde zelfstandig taken uit in het echte Apollo-systeem — geen voorbereiding, geen script.</div>
+        </div>
+      </div>
+
+      <!-- Right: animated terminal -->
+      <div style="background:#0d1117;border:1px solid rgba(255,255,255,.1);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
+        <div style="background:rgba(255,255,255,.05);padding:9px 16px;display:flex;gap:7px;align-items:center;border-bottom:1px solid rgba(255,255,255,.07);flex-shrink:0;">
+          <div style="width:10px;height:10px;border-radius:50%;background:#ff5f57;"></div>
+          <div style="width:10px;height:10px;border-radius:50%;background:#febc2e;"></div>
+          <div style="width:10px;height:10px;border-radius:50%;background:#28c840;"></div>
+          <span style="margin-left:10px;font-family:'SF Mono',Menlo,monospace;font-size:11px;color:rgba(255,255,255,.35);letter-spacing:.08em;">claude · apollo mcp</span>
+        </div>
+        <div id="exp-term" style="padding:16px 20px;font-family:'SF Mono',Menlo,Courier,monospace;font-size:13px;line-height:1.75;color:#c9d1d9;flex:1;overflow:hidden;"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</section>
+<style>
+#exp-term .tc{color:#f7901a;}
+#exp-term .tok{color:#4ade80;}
+#exp-term .tdim{color:rgba(255,255,255,.32);}
+#exp-term .tval{color:#79c0ff;}
+</style>
+<script>
+(function(){
+  var termLines=[
+    {cls:'tc',   txt:'$ apollo bestellingen --status binnenkomst'},
+    {cls:'tdim', txt:'→ Ophalen uit Apollo...'},
+    {cls:'tok',  txt:'✓ 3 bestellingen gevonden'},
+    {cls:'tval', txt:'  #4821 · Bakker, M.  · Rodenstock +2.50'},
+    {cls:'tval', txt:'  #4822 · Jansen, K.  · CL Air Optix Toric'},
+    {cls:'tval', txt:'  #4823 · Peters, T.  · Montuur + enkelvoudig'},
+    {cls:'tc',   txt:'$ apollo update --id 4821 --status Binnengemeld'},
+    {cls:'tdim', txt:'→ Apollo bijwerken...'},
+    {cls:'tok',  txt:'✓ #4821 bijgewerkt · sms verzonden naar klant'},
+    {cls:'tc',   txt:'$ apollo bestellen --klant Peters_T'},
+    {cls:'tdim', txt:'→ Laatste bestelling ophalen...'},
+    {cls:'tok',  txt:'✓ CL Dailies · RE +1.75 cyl -0.75'},
+    {cls:'tdim', txt:'→ Order geplaatst bij leverancier'},
+    {cls:'tok',  txt:'✓ Klaar · Apollo bijgewerkt'},
+    {cls:'tc',   txt:'$ _'}
+  ];
+  var termEl=document.getElementById('exp-term');
+  if(!termEl)return;
+  var ti=0;
+  var delays={tc:680,tok:320,tdim:420,tval:200};
+  function termNext(){
+    if(ti>=termLines.length){
+      ti=0;
+      while(termEl.firstChild){termEl.removeChild(termEl.firstChild);}
+      setTimeout(termNext,1200);
+      return;
+    }
+    var l=termLines[ti++];
+    var row=document.createElement('div');
+    row.className=l.cls;
+    row.textContent=l.txt;
+    termEl.appendChild(row);
+    termEl.scrollTop=termEl.scrollHeight;
+    setTimeout(termNext,delays[l.cls]||400);
+  }
+  setTimeout(termNext,600);
+})();
+</script>
+
+<!-- ══════════════════════════════
   SLIDE 3 · VIDEO — BOUTIQUE
 ══════════════════════════════ -->
 <section class="slide bg-dark" data-bg="dark" id="slide-videos">
 
   <div style="position:absolute;top:0;left:0;right:0;z-index:10;display:flex;justify-content:space-between;align-items:flex-start;padding:28px 40px 0;">
-    <div class="lbl li">D · Desire &nbsp;·&nbsp; Elke minuut telt</div>
+    <div class="lbl li">Elke minuut telt</div>
     <div class="wm li">oogwereld</div>
   </div>
 
@@ -384,63 +474,12 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:none}
 </section>
 
 <!-- ══════════════════════════════
-  SLIDE 4 · OPLOSSING 1: DATA ENTRY
-══════════════════════════════ -->
-<section class="slide bg-cream" data-bg="cream">
-<div class="wrap">
-  <div class="top">
-    <div class="lbl or">D · Desire &nbsp;·&nbsp; De oplossing</div>
-    <div class="wm">oogwereld</div>
-  </div>
-  <div class="mid" style="gap:20px;justify-content:flex-start;padding-top:4px;">
-    <h2 class="disp">Medewerker bij de klant.<br><em>AI regelt de administratie.</em></h2>
-    <div class="g3" style="align-items:stretch;flex:1;min-height:0;">
-      <div class="card or-l" style="display:flex;flex-direction:column;gap:10px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-          <div class="lbl or">Taak 1</div>
-          <div style="font-family:var(--fb);font-size:15px;color:var(--orange);letter-spacing:.04em;">~30 sec/bestelling</div>
-        </div>
-        <div class="ct">Binnenmelden bestellingen</div>
-        <div class="cb">Medewerker meldt binnenkomst — AI registreert direct in Apollo. <strong>Uitbreiding:</strong> leveranciers sturen bestellijst per mail → AI verwerkt alle Oogwereld-locaties volledig automatisch, zonder handmatige stap.</div>
-      </div>
-      <div class="card or-l" style="display:flex;flex-direction:column;gap:10px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-          <div class="lbl or">Taak 2</div>
-          <div style="font-family:var(--fb);font-size:15px;color:var(--orange);letter-spacing:.04em;">~30 sec/klant</div>
-        </div>
-        <div class="ct">Klaar melden bestellingen</div>
-        <div class="cb">Bestelling gereed? Één klik verstuurt alles: Apollo bijgewerkt, sms én e-mail naar klant. Optioneel: AI belt de klant automatisch op.</div>
-      </div>
-      <div class="card or-l" style="display:flex;flex-direction:column;gap:10px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-          <div class="lbl or">Taak 3</div>
-          <div style="font-family:var(--fb);font-size:15px;color:var(--orange);letter-spacing:.04em;">~30 sec/bestelling</div>
-        </div>
-        <div class="ct">Contactlenzen bestellen</div>
-        <div class="cb">Één commando herhaalt de laatste bestelling van de klant direct. AI haalt specificaties op uit Apollo en plaatst de order — geen handmatige invoer.</div>
-      </div>
-    </div>
-    <div class="g2" style="align-items:center;margin-top:4px;">
-      <div class="ob">
-        <div style="font-family:var(--fb);font-size:24px;font-weight:700;line-height:1.3;">Neus niet in de computer.<br>Ogen op de klant.</div>
-        <div class="sub">Geen aparte data-entry medewerker nodig — de opticien praat met de klant terwijl AI de administratie afhandelt.</div>
-      </div>
-      <div class="card cr">
-        <div class="ct">Hoe het werkt</div>
-        <div class="cb">AI draait als een <strong>fork naast Apollo</strong> — leest en schrijft dezelfde data, zonder dat Apollo iets hoeft aan te passen. Medewerker spreekt gewone taal → AI verwerkt op de achtergrond. Geen losse data-entry meer. De medewerker blijft bij de klant.</div>
-      </div>
-    </div>
-  </div>
-</div>
-</section>
-
-<!-- ══════════════════════════════
   SLIDE 5 · PROCES VISUALISATIE
 ══════════════════════════════ -->
 <section class="slide bg-ink" data-bg="dark">
 <div class="wrap">
   <div class="top">
-    <div class="lbl li">D · Desire &nbsp;·&nbsp; Hoe het werkt</div>
+    <div class="lbl li">Hoe het werkt</div>
     <div class="wm li">oogwereld</div>
   </div>
   <div class="mid" style="gap:28px;justify-content:flex-start;padding-top:4px;">
@@ -517,20 +556,64 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:none}
     </div>
 
     <!-- Bottom callout -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:4px;">
-      <div style="background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.2);border-radius:14px;padding:18px 22px;display:flex;gap:14px;align-items:flex-start;">
-        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" flex-shrink="0" style="flex-shrink:0;margin-top:1px;"><circle cx="11" cy="11" r="10" fill="rgba(34,197,94,.15)" stroke="rgba(34,197,94,.4)" stroke-width="1"/><path d="M6.5 11l3 3 6-6" stroke="#4ade80" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <div>
-          <div style="font-family:var(--fb);font-size:16px;font-weight:700;color:#4ade80;margin-bottom:4px;">Leverancier hoeft niets aan te passen</div>
-          <div style="font-family:var(--fu);font-size:15px;color:rgba(255,255,255,.65);line-height:1.5;">Stuurt de bestellijst precies zoals nu — Claude leest het formaat automatisch.</div>
-        </div>
-      </div>
+    <div style="margin-top:4px;">
       <div style="background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.2);border-radius:14px;padding:18px 22px;display:flex;gap:14px;align-items:flex-start;">
         <svg width="22" height="22" viewBox="0 0 22 22" fill="none" flex-shrink="0" style="flex-shrink:0;margin-top:1px;"><circle cx="11" cy="11" r="10" fill="rgba(34,197,94,.15)" stroke="rgba(34,197,94,.4)" stroke-width="1"/><path d="M6.5 11l3 3 6-6" stroke="#4ade80" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         <div>
           <div style="font-family:var(--fb);font-size:16px;font-weight:700;color:#4ade80;margin-bottom:4px;">Apollo hoeft niets te veranderen</div>
-          <div style="font-family:var(--fu);font-size:15px;color:rgba(255,255,255,.65);line-height:1.5;">MCP-plugin koppelt op de bestaande installatie. Geen API-wijzigingen, geen IT-project.</div>
+          <div style="font-family:var(--fu);font-size:15px;color:rgba(255,255,255,.65);line-height:1.5;">MCP-plugin koppelt op de bestaande Apollo-software.</div>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ══════════════════════════════
+  SLIDE 4 · OPLOSSING 1: DATA ENTRY
+══════════════════════════════ -->
+<section class="slide bg-cream" data-bg="cream">
+<div class="wrap">
+  <div class="top">
+    <div class="lbl or">De oplossing</div>
+    <div class="wm">oogwereld</div>
+  </div>
+  <div class="mid" style="gap:20px;justify-content:flex-start;padding-top:4px;">
+    <h2 class="disp">Medewerker bij de klant.<br><em>AI regelt de administratie.</em></h2>
+    <div class="g3" style="align-items:stretch;flex:1;min-height:0;">
+      <div class="card or-l" style="display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div class="lbl or">Taak 1</div>
+          <div style="font-family:var(--fb);font-size:15px;color:var(--orange);letter-spacing:.04em;">~30 sec/bestelling</div>
+        </div>
+        <div class="ct">Binnenmelden bestellingen</div>
+        <div class="cb">Medewerker meldt binnenkomst — AI registreert direct in Apollo. <strong>Uitbreiding:</strong> leveranciers sturen bestellijst per mail → AI verwerkt alle Oogwereld-locaties volledig automatisch, zonder handmatige stap.</div>
+      </div>
+      <div class="card or-l" style="display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div class="lbl or">Taak 2</div>
+          <div style="font-family:var(--fb);font-size:15px;color:var(--orange);letter-spacing:.04em;">~30 sec/klant</div>
+        </div>
+        <div class="ct">Klaar melden bestellingen</div>
+        <div class="cb">Bestelling gereed? Één klik verstuurt alles: Apollo bijgewerkt, sms én e-mail naar klant. Optioneel: AI belt de klant automatisch op.</div>
+      </div>
+      <div class="card or-l" style="display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div class="lbl or">Taak 3</div>
+          <div style="font-family:var(--fb);font-size:15px;color:var(--orange);letter-spacing:.04em;">~30 sec/bestelling</div>
+        </div>
+        <div class="ct">Contactlenzen bestellen</div>
+        <div class="cb">Één commando herhaalt de laatste bestelling van de klant direct. AI haalt specificaties op uit Apollo en plaatst de order — geen handmatige invoer.</div>
+      </div>
+    </div>
+    <div class="g2" style="align-items:center;margin-top:4px;">
+      <div class="ob">
+        <div style="font-family:var(--fb);font-size:24px;font-weight:700;line-height:1.3;">Neus niet in de computer.<br>Ogen op de klant.</div>
+        <div class="sub">Geen aparte data-entry medewerker nodig — de opticien praat met de klant terwijl AI de administratie afhandelt.</div>
+      </div>
+      <div class="card cr">
+        <div class="ct">Hoe het werkt</div>
+        <div class="cb">AI draait als een <strong>fork naast Apollo</strong> — leest en schrijft dezelfde data, zonder dat Apollo iets hoeft aan te passen. Medewerker spreekt gewone taal → AI verwerkt op de achtergrond. Geen losse data-entry meer. De medewerker blijft bij de klant.</div>
       </div>
     </div>
   </div>
@@ -543,7 +626,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:none}
 <section class="slide bg-cream" data-bg="cream">
 <div class="wrap">
   <div class="top">
-    <div class="lbl or">D · Desire &nbsp;·&nbsp; De transformatie-roadmap</div>
+    <div class="lbl or">De transformatie-roadmap</div>
     <div class="wm">oogwereld</div>
   </div>
   <div class="mid" style="gap:18px;justify-content:flex-start;padding-top:4px;">
@@ -568,7 +651,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:none}
       <div style="background:rgba(247,143,26,.04);border:1.5px dashed rgba(247,143,26,.3);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:8px;">
         <div style="font-family:var(--fb);font-size:24px;font-weight:700;color:rgba(247,143,26,.35);line-height:1;">2</div>
         <div style="font-family:var(--fb);font-size:15px;font-weight:700;color:var(--head);line-height:1.2;">Leidende coalitie</div>
-        <div style="font-family:var(--fu);font-size:15px;color:rgba(0,0,0,.62);line-height:1.4;">CEO + CFO + boutique-eigenaar commitment ophalen</div>
+        <div style="font-family:var(--fu);font-size:15px;color:rgba(0,0,0,.62);line-height:1.4;">Oogwereld + boutique-eigenaar commitment ophalen</div>
         <div style="margin-top:auto;font-family:var(--fu);font-size:17px;letter-spacing:.08em;color:rgba(247,143,26,.85);text-transform:uppercase;font-weight:600;">volgende stap</div>
       </div>
 
@@ -625,7 +708,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:none}
 <section class="slide bg-cream" data-bg="cream">
 <div class="wrap" style="padding:36px 52px;">
   <div class="top">
-    <div class="lbl or">D · Desire &nbsp;·&nbsp; Alles wat AI kan overnemen</div>
+    <div class="lbl or">Alles wat AI kan overnemen</div>
     <div class="wm">oogwereld</div>
   </div>
   <div class="mid" style="gap:14px;justify-content:flex-start;padding-top:2px;">
@@ -761,7 +844,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:none}
 <section class="slide bg-ink" data-bg="dark">
 <div class="wrap">
   <div class="top">
-    <div class="lbl li">D · Desire &nbsp;·&nbsp; Privacy &amp; AVG</div>
+    <div class="lbl li">Privacy &amp; AVG</div>
     <div class="wm li">oogwereld</div>
   </div>
   <div class="mid" style="gap:26px;justify-content:flex-start;padding-top:4px;">
@@ -807,7 +890,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:none}
 <section class="slide bg-cream" data-bg="cream">
 <div class="wrap">
   <div class="top">
-    <div class="lbl or">A · Action &nbsp;·&nbsp; Pilot · Één Oogwereld-boutique</div>
+    <div class="lbl or">Pilot · Één Oogwereld-boutique</div>
     <div class="wm">oogwereld</div>
   </div>
   <div class="mid" style="gap:20px;justify-content:flex-start;padding-top:4px;">
@@ -824,36 +907,13 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:none}
             <div class="rs">Dit gesprek — personeelstekort, werkdruk en herhaalwerk tastbaar maken voor de coalitie</div>
           </div>
         </div>
-        <div class="ri">
-          <div class="rn">2</div>
-          <div>
-            <div class="rt">Coalitie &amp; visie <span style="font-family:var(--fu);font-size:15px;color:var(--orange);font-weight:400;letter-spacing:.06em;">STAP 2–4</span></div>
-            <div class="rs">AI als fork naast Apollo · installatie één boutique · medewerkers meenemen, geen verplichting</div>
-          </div>
-        </div>
-        <div class="ri">
-          <div class="rn">3</div>
-          <div>
-            <div class="rt">Pilot &amp; eerste winst <span style="font-family:var(--fu);font-size:15px;color:var(--orange);font-weight:400;letter-spacing:.06em;">STAP 5–6</span></div>
-            <div class="rs">Drie taken live · KPI: tijdwinst per taak, medewerkerstevredenheid · drempelwaarde: ≥20 min/dag bespaard</div>
-          </div>
-        </div>
-        <div class="ri">
-          <div class="rn">4</div>
-          <div>
-            <div class="rt">Verankeren &amp; uitrollen <span style="font-family:var(--fu);font-size:15px;color:var(--orange);font-weight:400;letter-spacing:.06em;">STAP 7–8</span></div>
-            <div class="rs">Resultaten valideren · uitrol alle boutiques · AI structureel verankerd in werkwijze</div>
-          </div>
-        </div>
       </div>
       <div class="card ink" style="padding:32px;height:100%;display:flex;flex-direction:column;gap:18px;">
         <div style="font-family:var(--fd);font-size:clamp(24px,3.2vw,42px);line-height:1.05;color:var(--white);">
           Apollo hoeft<br>niets te<br><span style="color:var(--orange);">veranderen.</span>
         </div>
         <div style="font-family:var(--fu);font-size:15px;color:rgba(255,255,255,.5);line-height:1.7;">
-          MCP-plugin koppelt op de bestaande Apollo-installatie.<br>
-          Claude CLI installeert in een middag.<br>
-          <strong style="color:rgba(255,255,255,.8);">Geen API-wijzigingen, geen IT-project.</strong>
+          MCP-plugin koppelt op de bestaande Apollo-software.
         </div>
 
 
@@ -862,7 +922,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:none}
           <div style="font-family:var(--fb);font-size:15px;font-weight:700;color:rgba(255,255,255,.5);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;">Het voorstel</div>
           <div style="display:flex;flex-direction:column;gap:5px;">
             <div style="display:flex;gap:9px;align-items:baseline;"><div style="width:5px;height:5px;border-radius:50%;background:var(--orange);flex-shrink:0;margin-top:4px;"></div><span style="font-family:var(--fu);font-size:15px;color:rgba(255,255,255,.7);">Pilot in één Oogwereld-boutique</span></div>
-            <div style="display:flex;gap:9px;align-items:baseline;"><div style="width:5px;height:5px;border-radius:50%;background:var(--orange);flex-shrink:0;margin-top:4px;"></div><span style="font-family:var(--fu);font-size:15px;color:rgba(255,255,255,.7);">Geen IT-project, geen aanpassingen aan Apollo</span></div>
+            <div style="display:flex;gap:9px;align-items:baseline;"><div style="width:5px;height:5px;border-radius:50%;background:var(--orange);flex-shrink:0;margin-top:4px;"></div><span style="font-family:var(--fu);font-size:15px;color:rgba(255,255,255,.7);">Koppelt op de bestaande Apollo-software</span></div>
             <div style="display:flex;gap:9px;align-items:baseline;"><div style="width:5px;height:5px;border-radius:50%;background:var(--orange);flex-shrink:0;margin-top:4px;"></div><span style="font-family:var(--fu);font-size:15px;color:rgba(255,255,255,.7);">Medewerkers beschikbaar voor één uur uitleg</span></div>
             <div style="display:flex;gap:9px;align-items:baseline;"><div style="width:5px;height:5px;border-radius:50%;background:var(--orange);flex-shrink:0;margin-top:4px;"></div><span style="font-family:var(--fu);font-size:15px;color:rgba(255,255,255,.7);">Evaluatie na 30 dagen</span></div>
           </div>
@@ -881,6 +941,165 @@ html,body{width:100%;height:100%;overflow:hidden;background:#000;cursor:none}
 </section>
 
 
+
+<!-- ══════════════════════════════
+  SLIDE 10 · UITROL NEDERLAND
+══════════════════════════════ -->
+<section class="slide bg-ink" data-bg="dark">
+<div class="wrap">
+  <div class="top">
+    <div class="lbl li">Uitrol · Van boutique naar netwerk</div>
+    <div class="wm li">oogwereld</div>
+  </div>
+  <div class="mid" style="flex-direction:row;gap:28px;padding-top:4px;align-items:stretch;">
+
+    <!-- Left panel -->
+    <div style="display:flex;flex-direction:column;gap:14px;width:200px;flex-shrink:0;justify-content:center;">
+      <h2 class="disp li" style="font-size:clamp(22px,2.6vw,34px);line-height:1.1;margin:0;">Begin<br>klein.</h2>
+      <p style="font-family:var(--fu);font-size:13px;color:rgba(255,255,255,.5);line-height:1.5;margin:0;">Één boutique in Brabant. Bewezen aanpak. Dan uitgerold over het hele netwerk.</p>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px;">
+        <div id="mpl1" style="display:flex;gap:10px;align-items:flex-start;padding:11px 13px;border-radius:10px;border-left:3px solid rgba(247,143,26,.9);background:rgba(247,143,26,.1);transition:all .5s ease;">
+          <div style="font-family:var(--fb);font-size:19px;font-weight:700;color:var(--orange);line-height:1;flex-shrink:0;">1</div>
+          <div><div style="font-family:var(--fb);font-size:13px;font-weight:700;color:var(--white);margin-bottom:2px;">Pilot</div><div style="font-family:var(--fu);font-size:11px;color:rgba(255,255,255,.6);line-height:1.3;">Hoogerheide · West-Brabant</div></div>
+        </div>
+        <div id="mpl2" style="display:flex;gap:10px;align-items:flex-start;padding:11px 13px;border-radius:10px;border-left:3px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);transition:all .5s ease;opacity:.35;">
+          <div style="font-family:var(--fb);font-size:19px;font-weight:700;color:rgba(255,255,255,.4);line-height:1;flex-shrink:0;">2</div>
+          <div><div style="font-family:var(--fb);font-size:13px;font-weight:700;color:var(--white);margin-bottom:2px;">Noord-Brabant</div><div style="font-family:var(--fu);font-size:11px;color:rgba(255,255,255,.6);line-height:1.3;">20+ boutiques · bewezen resultaat</div></div>
+        </div>
+        <div id="mpl3" style="display:flex;gap:10px;align-items:flex-start;padding:11px 13px;border-radius:10px;border-left:3px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);transition:all .5s ease;opacity:.35;">
+          <div style="font-family:var(--fb);font-size:19px;font-weight:700;color:rgba(255,255,255,.4);line-height:1;flex-shrink:0;">3</div>
+          <div><div style="font-family:var(--fb);font-size:13px;font-weight:700;color:var(--white);margin-bottom:2px;">Heel Nederland</div><div style="font-family:var(--fu);font-size:11px;color:rgba(255,255,255,.6);line-height:1.3;">40+ boutiques · volledig netwerk</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Map -->
+    <div style="flex:1;display:flex;align-items:center;justify-content:center;min-width:0;">
+      <svg id="nlmap" viewBox="0 0 400 450" style="height:100%;max-height:420px;width:auto;" fill="none">
+        <!-- Netherlands outline (simplified) -->
+        <path d="M 146,98 L 118,140 L 95,185 L 82,248 L 65,285 L 40,320 L 30,335 L 50,358 L 140,368 L 215,362 L 235,405 L 272,436 L 290,368 L 275,250 L 305,245 L 350,192 L 378,178 L 363,40 L 325,18 L 248,13 L 195,55 L 168,90 Z" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.15)" stroke-width="1.5" stroke-linejoin="round"/>
+        <!-- Brabant region highlight (phase 1+2) -->
+        <path id="brabant-hl" d="M 90,268 L 230,268 L 240,365 L 85,365 Z" fill="rgba(247,143,26,.06)" stroke="rgba(247,143,26,.18)" stroke-width="1" stroke-dasharray="4 3" opacity="0" style="transition:opacity .6s;"/>
+
+        <!-- PHASE 0: Pilot dot — Hoogerheide -->
+        <circle class="mdot" data-p="0" cx="99" cy="334" r="7" fill="var(--orange)" opacity="0" stroke="rgba(247,143,26,.3)" stroke-width="8"/>
+        <!-- pulse ring on pilot dot -->
+        <circle id="pilot-ring" cx="99" cy="334" r="7" fill="none" stroke="rgba(247,143,26,.5)" stroke-width="2" opacity="0"/>
+        <text id="hl-label" x="112" y="330" font-family="system-ui,sans-serif" font-size="10" fill="var(--orange)" font-weight="700" opacity="0">Hoogerheide</text>
+
+        <!-- PHASE 1: Remaining Brabant + Limburg dots -->
+        <circle class="mdot" data-p="1" cx="99"  cy="322" r="5" fill="var(--orange)" opacity="0"/><!-- Bergen op Zoom -->
+        <circle class="mdot" data-p="1" cx="148" cy="306" r="5" fill="var(--orange)" opacity="0"/><!-- Breda -->
+        <circle class="mdot" data-p="1" cx="164" cy="300" r="5" fill="var(--orange)" opacity="0"/><!-- Dongen -->
+        <circle class="mdot" data-p="1" cx="156" cy="302" r="5" fill="var(--orange)" opacity="0"/><!-- Oosterhout -->
+        <circle class="mdot" data-p="1" cx="167" cy="271" r="5" fill="var(--orange)" opacity="0"/><!-- Sleeuwijk -->
+        <circle class="mdot" data-p="1" cx="176" cy="294" r="5" fill="var(--orange)" opacity="0"/><!-- Waalwijk -->
+        <circle class="mdot" data-p="1" cx="198" cy="298" r="5" fill="var(--orange)" opacity="0"/><!-- Vught -->
+        <circle class="mdot" data-p="1" cx="203" cy="306" r="5" fill="var(--orange)" opacity="0"/><!-- Boxtel -->
+        <circle class="mdot" data-p="1" cx="207" cy="300" r="5" fill="var(--orange)" opacity="0"/><!-- Sint-Michielsgestel -->
+        <circle class="mdot" data-p="1" cx="179" cy="312" r="5" fill="var(--orange)" opacity="0"/><!-- Tilburg -->
+        <circle class="mdot" data-p="1" cx="177" cy="318" r="5" fill="var(--orange)" opacity="0"/><!-- Goirle -->
+        <circle class="mdot" data-p="1" cx="134" cy="312" r="5" fill="var(--orange)" opacity="0"/><!-- Etten-Leur -->
+        <circle class="mdot" data-p="1" cx="163" cy="329" r="5" fill="var(--orange)" opacity="0"/><!-- Baarle-Nassau -->
+        <circle class="mdot" data-p="1" cx="209" cy="320" r="5" fill="var(--orange)" opacity="0"/><!-- Best -->
+        <circle class="mdot" data-p="1" cx="218" cy="330" r="5" fill="var(--orange)" opacity="0"/><!-- Eindhoven -->
+        <circle class="mdot" data-p="1" cx="225" cy="327" r="5" fill="var(--orange)" opacity="0"/><!-- Nuenen -->
+        <circle class="mdot" data-p="1" cx="197" cy="342" r="5" fill="var(--orange)" opacity="0"/><!-- Hapert -->
+        <circle class="mdot" data-p="1" cx="191" cy="344" r="5" fill="var(--orange)" opacity="0"/><!-- Bladel -->
+        <circle class="mdot" data-p="1" cx="186" cy="344" r="5" fill="var(--orange)" opacity="0"/><!-- Reusel -->
+        <circle class="mdot" data-p="1" cx="227" cy="356" r="5" fill="var(--orange)" opacity="0"/><!-- Budel -->
+        <circle class="mdot" data-p="1" cx="269" cy="368" r="5" fill="var(--orange)" opacity="0"/><!-- Roermond -->
+        <circle class="mdot" data-p="1" cx="268" cy="413" r="5" fill="var(--orange)" opacity="0"/><!-- Heerlen -->
+        <circle class="mdot" data-p="1" cx="239" cy="421" r="5" fill="var(--orange)" opacity="0"/><!-- Maastricht -->
+
+        <!-- PHASE 2: Rest of Netherlands -->
+        <circle class="mdot" data-p="2" cx="195" cy="275" r="4" fill="#4ade80" opacity="0"/><!-- Zaltbommel -->
+        <circle class="mdot" data-p="2" cx="255" cy="258" r="4" fill="#4ade80" opacity="0"/><!-- Elst -->
+        <circle class="mdot" data-p="2" cx="229" cy="256" r="4" fill="#4ade80" opacity="0"/><!-- Kesteren -->
+        <circle class="mdot" data-p="2" cx="299" cy="251" r="4" fill="#4ade80" opacity="0"/><!-- Doetinchem -->
+        <circle class="mdot" data-p="2" cx="230" cy="214" r="4" fill="#4ade80" opacity="0"/><!-- Voorthuizen -->
+        <circle class="mdot" data-p="2" cx="280" cy="211" r="4" fill="#4ade80" opacity="0"/><!-- Twello -->
+        <circle class="mdot" data-p="2" cx="290" cy="225" r="4" fill="#4ade80" opacity="0"/><!-- Zutphen -->
+        <circle class="mdot" data-p="2" cx="248" cy="188" r="4" fill="#4ade80" opacity="0"/><!-- Nunspeet -->
+        <circle class="mdot" data-p="2" cx="232" cy="193" r="4" fill="#4ade80" opacity="0"/><!-- Harderwijk -->
+        <circle class="mdot" data-p="2" cx="343" cy="250" r="4" fill="#4ade80" opacity="0"/><!-- Winterswijk -->
+        <circle class="mdot" data-p="2" cx="328" cy="211" r="4" fill="#4ade80" opacity="0"/><!-- Goor -->
+        <circle class="mdot" data-p="2" cx="313" cy="203" r="4" fill="#4ade80" opacity="0"/><!-- Holten -->
+        <circle class="mdot" data-p="2" cx="344" cy="222" r="4" fill="#4ade80" opacity="0"/><!-- Haaksbergen -->
+        <circle class="mdot" data-p="2" cx="349" cy="204" r="4" fill="#4ade80" opacity="0"/><!-- Hengelo -->
+        <circle class="mdot" data-p="2" cx="261" cy="160" r="4" fill="#4ade80" opacity="0"/><!-- Kampen -->
+        <circle class="mdot" data-p="2" cx="280" cy="168" r="4" fill="#4ade80" opacity="0"/><!-- Zwolle -->
+        <circle class="mdot" data-p="2" cx="290" cy="148" r="4" fill="#4ade80" opacity="0"/><!-- Staphorst -->
+        <circle class="mdot" data-p="2" cx="191" cy="228" r="4" fill="#4ade80" opacity="0"/><!-- Bilthoven -->
+        <circle class="mdot" data-p="2" cx="187" cy="243" r="4" fill="#4ade80" opacity="0"/><!-- Houten -->
+        <circle class="mdot" data-p="2" cx="160" cy="188" r="4" fill="#4ade80" opacity="0"/><!-- Amsterdam -->
+        <circle class="mdot" data-p="2" cx="157" cy="197" r="4" fill="#4ade80" opacity="0"/><!-- Amstelveen -->
+        <circle class="mdot" data-p="2" cx="152" cy="178" r="4" fill="#4ade80" opacity="0"/><!-- Zaandam -->
+        <circle class="mdot" data-p="2" cx="174" cy="197" r="4" fill="#4ade80" opacity="0"/><!-- Weesp -->
+        <circle class="mdot" data-p="2" cx="192" cy="206" r="4" fill="#4ade80" opacity="0"/><!-- Laren -->
+        <circle class="mdot" data-p="2" cx="136" cy="168" r="4" fill="#4ade80" opacity="0"/><!-- Heemskerk -->
+        <circle class="mdot" data-p="2" cx="176" cy="147" r="4" fill="#4ade80" opacity="0"/><!-- Hoorn -->
+        <circle class="mdot" data-p="2" cx="199" cy="137" r="4" fill="#4ade80" opacity="0"/><!-- Enkhuizen -->
+        <circle class="mdot" data-p="2" cx="102" cy="238" r="4" fill="#4ade80" opacity="0"/><!-- Rijswijk -->
+        <circle class="mdot" data-p="2" cx="123" cy="267" r="4" fill="#4ade80" opacity="0"/><!-- Barendrecht -->
+        <circle class="mdot" data-p="2" cx="128" cy="258" r="4" fill="#4ade80" opacity="0"/><!-- Capelle -->
+        <circle class="mdot" data-p="2" cx="132" cy="270" r="4" fill="#4ade80" opacity="0"/><!-- Hendrik-Ido-Ambacht -->
+        <circle class="mdot" data-p="2" cx="115" cy="229" r="4" fill="#4ade80" opacity="0"/><!-- Voorschoten -->
+        <circle class="mdot" data-p="2" cx="217" cy="169" r="4" fill="#4ade80" opacity="0"/><!-- Lelystad -->
+        <circle class="mdot" data-p="2" cx="242" cy="168" r="4" fill="#4ade80" opacity="0"/><!-- Dronten -->
+        <circle class="mdot" data-p="2" cx="224" cy="194" r="4" fill="#4ade80" opacity="0"/><!-- Zeewolde -->
+        <circle class="mdot" data-p="2" cx="250" cy="61"  r="4" fill="#4ade80" opacity="0"/><!-- Leeuwarden -->
+        <circle class="mdot" data-p="2" cx="242" cy="115" r="4" fill="#4ade80" opacity="0"/><!-- Lemmer -->
+        <circle class="mdot" data-p="2" cx="326" cy="93"  r="4" fill="#4ade80" opacity="0"/><!-- Assen -->
+        <circle class="mdot" data-p="2" cx="344" cy="144" r="4" fill="#4ade80" opacity="0"/><!-- Coevorden -->
+        <circle class="mdot" data-p="2" cx="328" cy="82"  r="4" fill="#4ade80" opacity="0"/><!-- Paterswolde -->
+      </svg>
+    </div>
+
+  </div>
+</div>
+</section>
+<script>
+(function(){
+  var dots=document.querySelectorAll('#nlmap .mdot');
+  var labels=[document.getElementById('mpl1'),document.getElementById('mpl2'),document.getElementById('mpl3')];
+  var hlLabel=document.getElementById('hl-label');
+  var pilotRing=document.getElementById('pilot-ring');
+  var brabantHl=document.getElementById('brabant-hl');
+  var phase=0;
+  var dur=[3500,3500,3500];
+  var ringR=7,ringDir=1;
+  function animRing(){
+    if(!pilotRing)return;
+    ringR+=ringDir*0.15;
+    if(ringR>14)ringDir=-1;
+    if(ringR<7){ringR=7;ringDir=1;}
+    pilotRing.setAttribute('r',ringR.toFixed(1));
+    var op=Math.max(0,(14-ringR)/7*0.6).toFixed(2);
+    pilotRing.setAttribute('opacity',op);
+    requestAnimationFrame(animRing);
+  }
+  animRing();
+  function goPhase(p){
+    dots.forEach(function(d){
+      var dp=parseInt(d.getAttribute('data-p'),10);
+      d.setAttribute('opacity',dp<=p?'1':'0');
+    });
+    if(hlLabel)hlLabel.setAttribute('opacity',p===0?'1':'0');
+    if(brabantHl)brabantHl.setAttribute('opacity',p<=1?'0.8':'0');
+    labels.forEach(function(lbl,i){
+      if(!lbl)return;
+      var active=(i===p),past=(i<p);
+      lbl.style.opacity=active?'1':past?'0.7':'0.35';
+      lbl.style.borderLeftColor=active?'rgba(247,143,26,.9)':past?'rgba(247,143,26,.35)':'rgba(255,255,255,.08)';
+      lbl.style.background=active?'rgba(247,143,26,.1)':past?'rgba(247,143,26,.04)':'rgba(255,255,255,.03)';
+    });
+    phase=(p+1)%3;
+    setTimeout(function(){goPhase(phase);},dur[p]);
+  }
+  setTimeout(function(){goPhase(0);},500);
+})();
+</script>
 
 </div><!-- /deck -->
 <script>
