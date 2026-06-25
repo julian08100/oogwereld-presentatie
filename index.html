@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Oogwereld · Factuur-automatisering</title>
+<title>Oogwereld · Finance-automatisering</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -80,10 +80,10 @@
 
   /* board (fixed coordinate canvas, scaled by JS) */
   .stage{display:flex;justify-content:center}
-  .board{position:relative;width:1320px;height:880px;transform-origin:top center;
+  .board{position:relative;width:1320px;height:1010px;transform-origin:top center;
     opacity:0;transition:opacity .6s ease}
   .board.ready{opacity:1}
-  .links{position:absolute;inset:0;width:1320px;height:880px;opacity:0;transition:opacity .8s ease .5s}
+  .links{position:absolute;inset:0;width:1320px;height:1010px;opacity:0;transition:opacity .8s ease .5s}
   .board.ready .links{opacity:1}
 
   .node{position:absolute;background:var(--card);
@@ -145,6 +145,7 @@
   .band.s1{background:rgba(29,54,134,.035)}
   .band.s2{background:rgba(63,125,110,.045)}
   .band.s3{background:rgba(247,143,26,.05)}
+  .band.s4{background:rgba(63,125,110,.06)}
   .band .blabel{position:absolute;top:-12px;left:18px;font-size:10px;font-weight:700;
     letter-spacing:.15em;text-transform:uppercase;color:var(--muted);
     background:var(--bg);padding:3px 11px;border-radius:20px;border:1px solid var(--card-edge)}
@@ -340,8 +341,8 @@
   <header>
     <div>
       <div class="kicker"><span class="pulse"></span>Workflow · Oogwereld</div>
-      <h1>Factuur&nbsp;<em>automatisering</em></h1>
-      <p class="sub">Van inkomende factuur tot Easy Invoice, in drie stappen. Bekijk hoe het nú handmatig gaat — en wat er verandert met AI.</p>
+      <h1>Finance&nbsp;<em>automatisering</em></h1>
+      <p class="sub">Van inkomende factuur tot acceptatie, in vier stappen. Bekijk hoe het nú handmatig gaat — en wat er verandert met AI.</p>
     </div>
     <div class="legend">
       <div class="row"><span class="swatch teal"></span> Handmatige / menselijke stap</div>
@@ -360,7 +361,7 @@
   <div class="stage">
     <div class="board" id="board">
       <div id="bands"></div>
-      <svg class="links" viewBox="0 0 1320 880" id="links" preserveAspectRatio="none"></svg>
+      <svg class="links" viewBox="0 0 1320 1010" id="links" preserveAspectRatio="none"></svg>
       <div id="nodes"></div>
     </div>
   </div>
@@ -445,47 +446,71 @@ const ICONS = {
   ledger:'<rect x="5" y="3" width="14" height="18" rx="2.2"/><path d="M9 8h6M9 12h6M9 16h4"/>',
   wrench:'<path d="M15.5 6.5a4 4 0 0 0-5.3 5L4 17.7l2.3 2.3 6.2-6.2a4 4 0 0 0 5-5.3l-2.4 2.4-2.1-.6-.6-2.1z"/>',
   archive:'<rect x="3" y="4" width="18" height="4.5" rx="1"/><path d="M5 8.5V19a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8.5M9.5 12h5"/>',
+  accept:'<path d="M12 3 5 6v5c0 4.2 3 7.6 7 9 4-1.4 7-4.8 7-9V6z"/><path d="m9 11.8 2 2 4-4"/>',
   trash:'<path d="M4 7h16M9.5 7V4.5h5V7M6 7l1 13h10l1-13"/><path d="M10 11v6M14 11v6"/>'
 };
 
 // drie stappen als achtergrond-banen
 const STEPS = [
-  {label:'Stap 1 · Mailbox',       x:24, y:16,  w:1272, h:340, cls:'s1'},
-  {label:'Stap 2 · Image Capture', x:24, y:392, w:1272, h:168, cls:'s2'},
-  {label:'Stap 3 · Easy Invoice',  x:24, y:600, w:1272, h:148, cls:'s3'}
+  {label:'Stap 1 · Mailbox',       x:20, y:16,  w:1284, h:376, cls:'s1'},
+  {label:'Stap 2 · Image Capture', x:20, y:420, w:1284, h:182, cls:'s2'},
+  {label:'Stap 3 · Verwerken',     x:20, y:626, w:1284, h:184, cls:'s3'},
+  {label:'Stap 4 · Acceptatie · mens in charge', x:20, y:838, w:1284, h:150, cls:'s4'}
 ];
 
-// twee versies van dezelfde flow — identieke posities, andere rol
+// posities één keer — beide flows delen dezelfde layout
+const LAYOUT = {
+  mail: {x:60,  y:104, w:250, h:96},
+  ai:   {x:372, y:90,  w:282, h:116},
+  filt: {x:716, y:104, w:212, h:96},
+  auto: {x:1000,y:30,  w:258, h:84},
+  arch: {x:1000,y:138, w:258, h:84},
+  del:  {x:1000,y:246, w:258, h:84},
+  human:{x:300, y:264, w:356, h:108},
+  cap:  {x:60,  y:452, w:258, h:104},
+  rem:  {x:374, y:454, w:250, h:100},
+  fill: {x:688, y:454, w:230, h:100},
+  push: {x:982, y:454, w:210, h:100},
+  trbl: {x:60,  y:648, w:620, h:132},
+  easy: {x:744, y:660, w:430, h:108},
+  accept:{x:430,y:852, w:470, h:120}
+};
+
+// twee versies van dezelfde flow — zelfde posities, andere rol
+const TROUBLE = ['Vrachtkosten','Onderdelen · veren, fronts, neuspads','Milieubijdrage','Overige toeslagen','Overig'];
+const BVS = ['Oogwereld','Eyecatcher','overige BV’s'];
 const FLOWS = {
   manual: [
-    {id:'mail', x:60,  y:96,  w:212, h:92,  kind:'',      icon:'mail',   tag:'', title:'Factuur-mailbox', desc:'Inkomende post', dot:1},
-    {id:'ai',   x:384, y:84,  w:252, h:112, kind:'human', icon:'user',   tag:'handmatig', title:'Medewerker leest mail', desc:'Alles met de hand doornemen', dot:1},
-    {id:'filt', x:744, y:96,  w:166, h:92,  kind:'human', icon:'filter', tag:'handmatig', title:'Uitsorteren', desc:'Per type · met de hand', dot:1},
-    {id:'auto', x:1004,y:40,  w:210, h:80,  kind:'human', icon:'reply',  tag:'herinnering', title:'Herinnering beantwoorden', desc:'Zelf mail terugsturen'},
-    {id:'arch', x:1004,y:130, w:210, h:74,  kind:'human', icon:'archive',tag:'pakbon', title:'Pakbon archiveren', desc:'Handmatig wegzetten'},
-    {id:'del',  x:1004,y:214, w:210, h:74,  kind:'human', icon:'trash',  tag:'t&t', title:'Track &amp; trace wissen', desc:'Handmatig verwijderen'},
-    {id:'human',x:296, y:248, w:288, h:92,  kind:'human', icon:'user',   tag:'per BV', title:'Controle &amp; sorteren', items:['Oogwereld','Eyecatcher','overige BV’s'], dot:1},
-    {id:'cap',  x:60,  y:430, w:252, h:100, kind:'human', icon:'scan',   tag:'', title:'Handmatig scannen', desc:'Zelf inscannen', dot:1},
-    {id:'rem',  x:412, y:434, w:232, h:92,  kind:'human', icon:'cut',    tag:'', title:'Pagina’s opschonen', desc:'Met de hand verwijderen'},
-    {id:'fill', x:712, y:434, w:194, h:92,  kind:'human', icon:'pen',    tag:'', title:'Velden overtypen', desc:'Zelf intikken'},
-    {id:'push', x:990, y:434, w:152, h:92,  kind:'human', icon:'push',   tag:'', title:'Doorzetten', desc:'Met de hand'},
-    {id:'easy', x:990, y:626, w:212, h:96,  kind:'',      icon:'ledger', tag:'', title:'Easy Invoice', desc:'Handmatig invoeren', dot:1},
-    {id:'trbl', x:60,  y:600, w:620, h:132, kind:'human', icon:'wrench', tag:'troubleshooting', title:'Troubleshooting', items:['Vrachtkosten','Onderdelen · veren, fronts, neuspads','Milieubijdrage','Overige toeslagen','Overig']}
+    {id:'mail', kind:'',      icon:'mail',   tag:'', title:'Factuur-mailbox', desc:'Inkomende post', dot:1},
+    {id:'ai',   kind:'human', icon:'user',   tag:'handmatig', title:'Medewerker leest mail', desc:'Alles met de hand doornemen', dot:1},
+    {id:'filt', kind:'human', icon:'filter', tag:'handmatig', title:'Uitsorteren', desc:'Per type · met de hand', dot:1},
+    {id:'auto', kind:'human', icon:'reply',  tag:'herinnering', title:'Herinnering beantwoorden', desc:'Zelf mail terugsturen'},
+    {id:'arch', kind:'human', icon:'archive',tag:'pakbon', title:'Pakbon archiveren', desc:'Handmatig wegzetten'},
+    {id:'del',  kind:'human', icon:'trash',  tag:'t&t', title:'Track &amp; trace wissen', desc:'Handmatig verwijderen'},
+    {id:'human',kind:'human', icon:'user',   tag:'per BV', title:'Controle &amp; sorteren', items:BVS, dot:1},
+    {id:'cap',  kind:'human', icon:'scan',   tag:'', title:'Handmatig scannen', desc:'Zelf inscannen', dot:1},
+    {id:'rem',  kind:'human', icon:'cut',    tag:'', title:'Pagina’s opschonen', desc:'Met de hand verwijderen'},
+    {id:'fill', kind:'human', icon:'pen',    tag:'', title:'Velden overtypen', desc:'Zelf intikken'},
+    {id:'push', kind:'human', icon:'push',   tag:'', title:'Doorzetten', desc:'Met de hand'},
+    {id:'easy', kind:'',      icon:'ledger', tag:'verwerken', title:'Easy Invoice', desc:'Handmatig invoeren', dot:1},
+    {id:'trbl', kind:'human', icon:'wrench', tag:'troubleshooting', title:'Troubleshooting', items:TROUBLE},
+    {id:'accept',kind:'human',icon:'accept', tag:'mens in charge', title:'Acceptatie', desc:'Mens keurt elke factuur goed', dot:1}
   ],
   ai: [
-    {id:'mail', x:60,  y:96,  w:212, h:92,  kind:'',      icon:'mail',   tag:'', title:'Factuur-mailbox', desc:'Inkomende facturen', dot:1},
-    {id:'ai',   x:384, y:84,  w:252, h:112, kind:'ai',    icon:'ai',     tag:'Claude', title:'AI @ oogwereld.nl', desc:'Leest · classificeert · cowork', dot:1},
-    {id:'filt', x:744, y:96,  w:166, h:92,  kind:'ai',    icon:'filter', tag:'auto', title:'Filters', desc:'Routeren per type', dot:1},
-    {id:'auto', x:1004,y:40,  w:210, h:80,  kind:'',      icon:'reply',  tag:'herinnering', title:'Antwoord: verkeerde mailbox', desc:'Mail terug aan afzender'},
-    {id:'arch', x:1004,y:130, w:210, h:74,  kind:'',      icon:'archive',tag:'pakbon', title:'Archiveren', desc:'Pakbonnen e.d. → archiefmap'},
-    {id:'del',  x:1004,y:214, w:210, h:74,  kind:'',      icon:'trash',  tag:'t&t', title:'Verwijderen', desc:'Track &amp; trace'},
-    {id:'human',x:296, y:248, w:288, h:92,  kind:'human', icon:'user',   tag:'per BV', title:'Controle &amp; sorteren', items:['Oogwereld','Eyecatcher','overige BV’s'], dot:1},
-    {id:'cap',  x:60,  y:430, w:252, h:100, kind:'ai',    icon:'scan',   tag:'auto', title:'Image Capture', desc:'Windows-server', dot:1},
-    {id:'rem',  x:412, y:434, w:232, h:92,  kind:'ai',    icon:'cut',    tag:'', title:'Pagina’s verwijderen', desc:'Scan opschonen'},
-    {id:'fill', x:712, y:434, w:194, h:92,  kind:'ai',    icon:'pen',    tag:'', title:'Extra’s invullen', desc:'Velden aanvullen'},
-    {id:'push', x:990, y:434, w:152, h:92,  kind:'ai',    icon:'push',   tag:'', title:'Doorzetten', desc:'Vastleggen'},
-    {id:'easy', x:990, y:626, w:212, h:96,  kind:'',      icon:'ledger', tag:'', title:'Easy Invoice', desc:'Boekhoudsysteem', dot:1},
-    {id:'trbl', x:60,  y:600, w:620, h:132, kind:'human', icon:'wrench', tag:'troubleshooting', title:'Troubleshooting', items:['Vrachtkosten','Onderdelen · veren, fronts, neuspads','Milieubijdrage','Overige toeslagen','Overig']}
+    {id:'mail', kind:'',   icon:'mail',   tag:'', title:'Factuur-mailbox', desc:'Inkomende facturen', dot:1},
+    {id:'ai',   kind:'ai', icon:'ai',     tag:'Claude', title:'AI @ oogwereld.nl', desc:'Leest · classificeert · cowork', dot:1},
+    {id:'filt', kind:'ai', icon:'filter', tag:'auto', title:'Filters', desc:'Routeren per type', dot:1},
+    {id:'auto', kind:'',   icon:'reply',  tag:'herinnering', title:'Antwoord: verkeerde mailbox', desc:'Mail terug aan afzender'},
+    {id:'arch', kind:'',   icon:'archive',tag:'pakbon', title:'Archiveren', desc:'Pakbonnen e.d. → archiefmap'},
+    {id:'del',  kind:'',   icon:'trash',  tag:'t&t', title:'Verwijderen', desc:'Track &amp; trace'},
+    {id:'human',kind:'ai', icon:'ai',     tag:'auto · per BV', title:'Controle &amp; sorteren', items:BVS, dot:1},
+    {id:'cap',  kind:'ai', icon:'scan',   tag:'auto', title:'Image Capture', desc:'Windows-server', dot:1},
+    {id:'rem',  kind:'ai', icon:'cut',    tag:'', title:'Pagina’s verwijderen', desc:'Scan opschonen'},
+    {id:'fill', kind:'ai', icon:'pen',    tag:'', title:'Extra’s invullen', desc:'Velden aanvullen'},
+    {id:'push', kind:'ai', icon:'push',   tag:'', title:'Doorzetten', desc:'Vastleggen'},
+    {id:'easy', kind:'',   icon:'ledger', tag:'verwerken', title:'Easy Invoice', desc:'Verwerken / boeken', dot:1},
+    {id:'trbl', kind:'human', icon:'wrench', tag:'troubleshooting', title:'Troubleshooting', items:TROUBLE},
+    {id:'accept',kind:'human',icon:'accept', tag:'mens in charge', title:'Acceptatie', desc:'Mens keurt elke factuur goed', dot:1}
   ]
 };
 
@@ -501,9 +526,11 @@ const EDGES = [
   {f:'cap',  fs:'r', t:'rem',  ts:'l', c:'sig'},
   {f:'rem',  fs:'r', t:'fill', ts:'l', c:'sig'},
   {f:'fill', fs:'r', t:'push', ts:'l', c:'sig'},
+  {f:'fill', fs:'b', t:'trbl', ts:'t', c:'sig'},
   {f:'push', fs:'b', t:'easy', ts:'t', c:'sig'},
-  {f:'easy', fs:'l', t:'trbl', ts:'r', c:'sig'},
-  {f:'trbl', fs:'l', t:'cap',  ts:'b', c:'fb'}
+  {f:'trbl', fs:'r', t:'easy', ts:'l', c:'sig'},
+  {f:'easy', fs:'b', t:'accept', ts:'t', c:'sig'},
+  {f:'accept',fs:'l', t:'cap',  ts:'b', c:'fb'}
 ];
 
 let map={};
@@ -533,7 +560,7 @@ const defs=`<defs><filter id="glow" x="-60%" y="-60%" width="220%" height="220%"
   <feGaussianBlur stdDeviation="1.4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>`;
 
 function renderFlow(key){
-  const nodes=FLOWS[key];
+  const nodes=FLOWS[key].map(c=>({...LAYOUT[c.id], ...c}));
   const manual=(key==='manual');
   map=Object.fromEntries(nodes.map(n=>[n.id,n]));
   // nodes
@@ -586,7 +613,7 @@ function fit(){
   const avail=Math.min(1320, window.innerWidth-56);
   const s=avail/1320;
   board.style.transform=`scale(${s})`;
-  document.querySelector('.stage').style.height=(880*s)+'px';
+  document.querySelector('.stage').style.height=(1010*s)+'px';
 }
 window.addEventListener('resize',fit);
 fit();
