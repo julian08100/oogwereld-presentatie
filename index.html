@@ -350,7 +350,7 @@
     <div class="disc-head">
       <div class="kicker"><span class="pulse"></span>Discussie · Welk model?</div>
       <h2>Amerikaans, <em>Europees</em> of Chinees?</h2>
-      <p class="sub">De cowork-flow draait nu op Claude. Maar welk model past het best bij een zorgbedrijf met gevoelige patiënt- en factuurgegevens? Een afweging langs vier assen: privacy/AVG, kwaliteit, kosten en ecosysteem. <span style="opacity:.7">Prijzen zijn indicatief, per 1&nbsp;miljoen tokens.</span></p>
+      <p class="sub">De cowork-flow draait nu op Claude. Maar welk model past het best bij een zorgbedrijf met gevoelige patiënt- en factuurgegevens? Een afweging langs vier assen: privacy/AVG, kwaliteit, kosten en ecosysteem. <span style="opacity:.7">API-tokenprijzen (input&nbsp;/&nbsp;output) per 1&nbsp;miljoen tokens.</span></p>
     </div>
 
     <div class="zone us">
@@ -364,7 +364,7 @@
             <li class="bad"><span class="mk">✕</span><span><span class="dim">Privacy</span>Verwerking in de VS, valt onder CLOUD Act; EU-garantie niet standaard.</span></li>
             <li class="bad"><span class="mk">✕</span><span><span class="dim">Kosten</span>Premium prijs per token t.o.v. open modellen.</span></li>
           </ul>
-          <div class="price">Prijs <b>≈ $3–15</b><span>per 1M tokens · Sonnet → Opus</span></div>
+          <div class="price">API <b>$3 / $15</b><span>per 1M tokens · in / uit (Sonnet)</span></div>
         </div>
         <div class="cmp us">
           <div class="cmp-h"><span class="cmp-name">ChatGPT</span><span class="cmp-org">OpenAI · VS</span></div>
@@ -374,7 +374,7 @@
             <li class="bad"><span class="mk">✕</span><span><span class="dim">Privacy</span>US-jurisdictie; aanhoudende zorgen over trainingsdata.</span></li>
             <li class="bad"><span class="mk">✕</span><span><span class="dim">Kwaliteit</span>Wisselend over versies; agentic tooling minder diep dan Claude.</span></li>
           </ul>
-          <div class="price">Prijs <b>Gratis – $10</b><span>per 1M tokens · mini → GPT-4o</span></div>
+          <div class="price">API <b>$2,50 / $10</b><span>per 1M tokens · in / uit (GPT-4o)</span></div>
         </div>
         <div class="cmp us">
           <div class="cmp-h"><span class="cmp-name">Gemini</span><span class="cmp-org">Google · VS</span></div>
@@ -384,7 +384,7 @@
             <li class="bad"><span class="mk">✕</span><span><span class="dim">Privacy</span>US-jurisdictie en verweven met het bredere Google-data-ecosysteem.</span></li>
             <li class="bad"><span class="mk">✕</span><span><span class="dim">Ecosysteem</span>Afhankelijkheid van Google-stack; minder neutraal.</span></li>
           </ul>
-          <div class="price">Prijs <b>≈ $0,30–5</b><span>per 1M tokens · Flash → Pro</span></div>
+          <div class="price">API <b>$1,25 / $10</b><span>per 1M tokens · in / uit (Pro)</span></div>
         </div>
       </div>
       <div class="cmp us strip" style="margin-top:16px">
@@ -395,7 +395,7 @@
           <li class="good"><span class="mk">✓</span><span><span class="dim">Ecosysteem</span>Volledig beheerd: schaalt vanzelf, geen eigen GPU-beheer, AWS-beveiliging (IAM, VPC, logging) eromheen.</span></li>
           <li class="bad"><span class="mk">✕</span><span><span class="dim">Kosten / Lock-in</span>AWS-marge bovenop de tokenprijs en gebondenheid aan het AWS-platform; vergt cloud-kennis om goed in te richten.</span></li>
         </ul>
-        <div class="price">Prijs <b>Modelprijs + AWS-marge</b><span>pay-per-use, geen abonnement</span></div>
+        <div class="price">API <b>$3 / $15 + AWS-marge</b><span>per 1M tokens · Claude via Bedrock</span></div>
       </div>
     </div>
 
@@ -410,7 +410,7 @@
             <li class="bad"><span class="mk">✕</span><span><span class="dim">Kwaliteit</span>Topmodellen lopen iets achter op de US-frontier bij de zwaarste taken.</span></li>
             <li class="bad"><span class="mk">✕</span><span><span class="dim">Ecosysteem</span>Kleiner ecosysteem en minder kant-en-klare agentic tooling.</span></li>
           </ul>
-          <div class="price">Prijs <b>≈ $2–6</b><span>per 1M tokens · of gratis zelf-hosten</span></div>
+          <div class="price">API <b>$2 / $6</b><span>per 1M tokens · in / uit (Large)</span></div>
         </div>
       </div>
     </div>
@@ -423,7 +423,7 @@
           <li class="good"><span class="mk">✓</span><span><span class="dim">Kwaliteit / Kosten</span>Verrassend sterk, zeer goedkoop, open-weights — uitstekend om lokaal te draaien.</span></li>
           <li class="bad"><span class="mk">✕</span><span><span class="dim">Privacy / Governance</span>Bij hosted gebruik gaat data naar China; censuur en geopolitiek. Voor EU-zakelijk: alléén lokaal draaien.</span></li>
         </ul>
-        <div class="price">Prijs <b>≈ $0,30–1</b><span>per 1M tokens · of gratis lokaal</span></div>
+        <div class="price">API <b>$0,27 / $1,10</b><span>per 1M tokens · in / uit</span></div>
       </div>
     </div>
 
@@ -432,16 +432,15 @@
       <h3>Of: <em>lokaal gehost</em> op je eigen server</h3>
       <p class="lh-lead">Open-weight modellen draai je op je eigen machine — de data verlaat het pand nooit. Geen prijs per token; je betaalt alleen eenmalig de hardware. De krachtigste route voor de meest gevoelige patiënt- en factuurgegevens.</p>
       <div class="lh-models">
-        <div class="lhm"><div class="nm">Llama 3.3 / 4 <small>Meta</small></div><p>Breed inzetbaar, sterk Nederlands; van 8B voor lichte taken tot 70B voor zwaar werk.</p><div class="pr">Gratis · open-weights</div></div>
-        <div class="lhm"><div class="nm">Mistral / Mixtral <small>FR · EU</small></div><p>Europees en efficiënt; Mixtral levert veel kwaliteit op bescheiden hardware.</p><div class="pr">Gratis · open-weights</div></div>
-        <div class="lhm"><div class="nm">Qwen <small>Alibaba</small></div><p>Sterk in redeneren en code; veel groottes, draait prima lokaal.</p><div class="pr">Gratis · open-weights</div></div>
-        <div class="lhm"><div class="nm">DeepSeek <small>open-weights</small></div><p>Verrassend krachtig en zuinig — lokaal draaien omzeilt de China-privacyzorg.</p><div class="pr">Gratis · open-weights</div></div>
-        <div class="lhm"><div class="nm">Google Gemma <small>Google</small></div><p>Compacte open modellen, makkelijk te draaien, veel kwaliteit per GB.</p><div class="pr">Gratis · open-weights</div></div>
-        <div class="lhm"><div class="nm">Microsoft Phi <small>Microsoft</small></div><p>Klein en snel; geschikt voor lichtere taken op simpele hardware.</p><div class="pr">Gratis · open-weights</div></div>
+        <div class="lhm"><div class="nm">Llama 3.3 / 4 <small>Meta</small></div><p>Breed inzetbaar, sterk Nederlands; van 8B voor lichte taken tot 70B voor zwaar werk.</p></div>
+        <div class="lhm"><div class="nm">Mistral / Mixtral <small>FR · EU</small></div><p>Europees en efficiënt; Mixtral levert veel kwaliteit op bescheiden hardware.</p></div>
+        <div class="lhm"><div class="nm">Qwen <small>Alibaba</small></div><p>Sterk in redeneren en code; veel groottes, draait prima lokaal.</p></div>
+        <div class="lhm"><div class="nm">DeepSeek <small>open-weights</small></div><p>Verrassend krachtig en zuinig — lokaal draaien omzeilt de China-privacyzorg.</p></div>
+        <div class="lhm"><div class="nm">Google Gemma <small>Google</small></div><p>Compacte open modellen, makkelijk te draaien, veel kwaliteit per GB.</p></div>
+        <div class="lhm"><div class="nm">Microsoft Phi <small>Microsoft</small></div><p>Klein en snel; geschikt voor lichtere taken op simpele hardware.</p></div>
       </div>
       <div class="lh-foot">
-        <div class="lh-cost"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 20h8M12 17v3"/></svg><span>Hardware: een <b>Mac Studio of GPU-pc ≈ €2.000–4.000</b> eenmalig — daarna onbeperkt draaien, €0 per token.</span></div>
-        <div class="lh-cost"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg><span>Of een <b>GPU-VPS</b> in hetzelfde NL-datacenter: een maandbedrag i.p.v. aanschaf, makkelijk op te schalen.</span></div>
+        <div class="lh-cost"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.3 7-11a7 7 0 0 0-14 0c0 4.7 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg><span><b>Geen prijs per token:</b> open-weights draaien op je eigen hardware en de data verlaat het pand nooit.</span></div>
       </div>
     </div>
 
