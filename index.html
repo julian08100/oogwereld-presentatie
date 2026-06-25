@@ -113,10 +113,43 @@
     background:var(--bg);border:1px solid var(--card-edge);padding:2px 8px;border-radius:20px}
   .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);flex:none;align-self:flex-start;
     margin-top:4px;animation:blink 2.4s infinite}
+  .node .items{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+  .node .pill{font-size:9.5px;font-weight:600;letter-spacing:.01em;color:var(--accent);
+    background:color-mix(in srgb,var(--accent) 9%,#fff);
+    border:1px solid color-mix(in srgb,var(--accent) 26%,#fff);
+    padding:3px 9px;border-radius:20px;white-space:nowrap;text-transform:none}
   @keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
 
   .node.ai{--accent:var(--ai)}
   .node.human{--accent:var(--human)}
+
+  /* flow-toggle (huidig handmatig ↔ met AI) */
+  .flowbar{display:flex;justify-content:center;margin:2px 0 16px}
+  .flowtoggle{display:inline-flex;gap:4px;background:var(--tint);
+    border:1px solid var(--card-edge);border-radius:30px;padding:4px}
+  .flowtoggle button{appearance:none;border:0;cursor:pointer;font:inherit;font-size:12.5px;
+    font-weight:600;letter-spacing:.01em;color:var(--muted);background:transparent;
+    padding:9px 18px;border-radius:24px;display:inline-flex;align-items:center;gap:8px;
+    transition:background .25s,color .25s,box-shadow .25s}
+  .flowtoggle button .d{width:8px;height:8px;border-radius:50%;background:currentColor;opacity:.45}
+  .flowtoggle button:hover{color:var(--navy)}
+  .flowtoggle button.active{background:var(--card);color:var(--navy);
+    box-shadow:0 6px 16px -8px rgba(0,3,47,.5),0 1px 0 rgba(255,255,255,.6)}
+  .flowtoggle button.active .d{opacity:1}
+  .flowtoggle button[data-flow="manual"].active{color:var(--human)}
+  .flowtoggle button[data-flow="ai"].active{color:var(--ai)}
+
+  /* stap-banen achter het diagram */
+  #bands{position:absolute;inset:0;pointer-events:none;z-index:0}
+  .band{position:absolute;border-radius:20px;border:1px dashed rgba(0,3,47,.10)}
+  .band.s1{background:rgba(29,54,134,.035)}
+  .band.s2{background:rgba(63,125,110,.045)}
+  .band.s3{background:rgba(247,143,26,.05)}
+  .band .blabel{position:absolute;top:-12px;left:18px;font-size:10px;font-weight:700;
+    letter-spacing:.15em;text-transform:uppercase;color:var(--muted);
+    background:var(--bg);padding:3px 11px;border-radius:20px;border:1px solid var(--card-edge)}
+  #nodes{position:relative;z-index:2}
+  .links{z-index:1}
 
   /* svg link styling */
   .flow{fill:none;stroke-width:2;stroke-linecap:round}
@@ -308,17 +341,25 @@
     <div>
       <div class="kicker"><span class="pulse"></span>Workflow · Oogwereld</div>
       <h1>Factuur&nbsp;<em>automatisering</em></h1>
-      <p class="sub">Van gedeelde inbox naar Easy Invoice — Claude leest, filtert en antwoordt; een mens controleert; een Windows-server legt vast, schoont op en zet elke factuur door.</p>
+      <p class="sub">Van inkomende factuur tot Easy Invoice, in drie stappen. Bekijk hoe het nú handmatig gaat — en wat er verandert met AI.</p>
     </div>
     <div class="legend">
-      <div class="row"><span class="swatch"></span> Automatisch signaal</div>
-      <div class="row"><span class="swatch teal"></span> Mens in de lus</div>
+      <div class="row"><span class="swatch teal"></span> Handmatige / menselijke stap</div>
+      <div class="row"><span class="swatch"></span> Geautomatiseerd (AI)</div>
       <div class="row"><span class="swatch dash"></span> Terugkoppeling / herkansing</div>
     </div>
   </header>
 
+  <div class="flowbar">
+    <div class="flowtoggle" id="flowtoggle">
+      <button data-flow="manual" class="active"><span class="d"></span>Hoe het nu gaat · handmatig</button>
+      <button data-flow="ai"><span class="d"></span>Met AI</button>
+    </div>
+  </div>
+
   <div class="stage">
     <div class="board" id="board">
+      <div id="bands"></div>
       <svg class="links" viewBox="0 0 1320 880" id="links" preserveAspectRatio="none"></svg>
       <div id="nodes"></div>
     </div>
@@ -361,6 +402,7 @@
           <li class="good"><span class="mk">✓</span><span><span class="dim">Kwaliteit</span>Frontier-kwaliteit van Claude Opus 4.6 — volledig beheerd, geen eigen GPU-beheer.</span></li>
           <li class="good"><span class="mk">✓</span><span><span class="dim">Ecosysteem</span>AWS-beveiliging eromheen (IAM, VPC, logging); schaalt vanzelf mee.</span></li>
           <li class="bad"><span class="mk">✕</span><span><span class="dim">Kosten / Lock-in</span>AWS-marge bovenop de tokenprijs en gebondenheid aan het AWS-platform.</span></li>
+          <li class="bad"><span class="mk">✕</span><span><span class="dim">Geopolitiek</span>Amerikaanse leverancier: handelsspanningen, CLOUD Act en mogelijke export-/toegangsrestricties kunnen voorwaarden of toegang raken.</span></li>
         </ul>
         <div class="price">API <b>$3 / $15 + AWS-marge</b><span>per 1M tokens · Claude via Bedrock (EU)</span></div>
       </div>
@@ -371,6 +413,7 @@
           <li class="good"><span class="mk">✓</span><span><span class="dim">Kosten</span>Open-weight modellen, scherpe prijzen, geen vendor lock-in.</span></li>
           <li class="bad"><span class="mk">✕</span><span><span class="dim">Kwaliteit</span>Topmodellen lopen iets achter op de frontier bij de zwaarste taken.</span></li>
           <li class="bad"><span class="mk">✕</span><span><span class="dim">Ecosysteem</span>Kleiner ecosysteem en minder kant-en-klare agentic tooling.</span></li>
+          <li class="good"><span class="mk">✓</span><span><span class="dim">Geopolitiek</span>Europese leverancier: digitale soevereiniteit, geen afhankelijkheid van Amerikaanse politiek of jurisdictie.</span></li>
         </ul>
         <div class="price">API <b>$2 / $6</b><span>per 1M tokens · in / uit (Large)</span></div>
       </div>
@@ -405,21 +448,46 @@ const ICONS = {
   trash:'<path d="M4 7h16M9.5 7V4.5h5V7M6 7l1 13h10l1-13"/><path d="M10 11v6M14 11v6"/>'
 };
 
-const NODES = [
-  {id:'mail', x:60,  y:96,  w:212, h:92,  kind:'',      icon:'mail',   tag:'01', title:'Factuur mailbox', desc:'Inkomende facturen', dot:1},
-  {id:'ai',   x:384, y:84,  w:252, h:112, kind:'ai',    icon:'ai',     tag:'Claude', title:'AI @ oogwereld.nl', desc:'Leest · classificeert · cowork', dot:1},
-  {id:'filt', x:744, y:96,  w:166, h:92,  kind:'',      icon:'filter', tag:'02', title:'Filters', desc:'Sorteren op BV · routeren', dot:1},
-  {id:'auto', x:1004,y:40,  w:210, h:80,  kind:'',      icon:'reply',  tag:'herinnering', title:'Antwoord: verkeerde mailbox', desc:'Mail terug aan afzender'},
-  {id:'arch', x:1004,y:130, w:210, h:74,  kind:'',      icon:'archive',tag:'pakbon', title:'Archiveren', desc:'Pakbonnen e.d. → archiefmap'},
-  {id:'del',  x:1004,y:214, w:210, h:74,  kind:'',      icon:'trash',  tag:'t&t', title:'Verwijderen', desc:'Track &amp; trace'},
-  {id:'human',x:300, y:248, w:236, h:92,  kind:'human', icon:'user',   tag:'factuur', title:'Menselijke controle', desc:'Echte facturen, per BV', dot:1},
-  {id:'cap',  x:60,  y:430, w:252, h:100, kind:'',      icon:'scan',   tag:'03', title:'Image Capture', desc:'Windows-server', dot:1},
-  {id:'rem',  x:412, y:434, w:232, h:92,  kind:'',      icon:'cut',    tag:'04', title:'Irrelevante pagina’s verwijderen', desc:'Scan opschonen'},
-  {id:'fill', x:712, y:434, w:194, h:92,  kind:'',      icon:'pen',    tag:'05', title:'Extra’s invullen', desc:'Velden aanvullen'},
-  {id:'push', x:990, y:434, w:152, h:92,  kind:'',      icon:'push',   tag:'06', title:'Doorzetten', desc:'Vastleggen'},
-  {id:'easy', x:990, y:626, w:212, h:96,  kind:'ai',    icon:'ledger', tag:'07', title:'Easy Invoice', desc:'Boekhoudsysteem', dot:1},
-  {id:'trbl', x:690, y:632, w:210, h:88,  kind:'human', icon:'wrench', tag:'', title:'Storingen oplossen', desc:'Bewaken & herstellen'}
+// drie stappen als achtergrond-banen
+const STEPS = [
+  {label:'Stap 1 · Mailbox',       x:24, y:16,  w:1272, h:340, cls:'s1'},
+  {label:'Stap 2 · Image Capture', x:24, y:392, w:1272, h:168, cls:'s2'},
+  {label:'Stap 3 · Easy Invoice',  x:24, y:600, w:1272, h:148, cls:'s3'}
 ];
+
+// twee versies van dezelfde flow — identieke posities, andere rol
+const FLOWS = {
+  manual: [
+    {id:'mail', x:60,  y:96,  w:212, h:92,  kind:'',      icon:'mail',   tag:'', title:'Factuur-mailbox', desc:'Inkomende post', dot:1},
+    {id:'ai',   x:384, y:84,  w:252, h:112, kind:'human', icon:'user',   tag:'handmatig', title:'Medewerker leest mail', desc:'Alles met de hand doornemen', dot:1},
+    {id:'filt', x:744, y:96,  w:166, h:92,  kind:'human', icon:'filter', tag:'handmatig', title:'Uitsorteren', desc:'Per type · met de hand', dot:1},
+    {id:'auto', x:1004,y:40,  w:210, h:80,  kind:'human', icon:'reply',  tag:'herinnering', title:'Herinnering beantwoorden', desc:'Zelf mail terugsturen'},
+    {id:'arch', x:1004,y:130, w:210, h:74,  kind:'human', icon:'archive',tag:'pakbon', title:'Pakbon archiveren', desc:'Handmatig wegzetten'},
+    {id:'del',  x:1004,y:214, w:210, h:74,  kind:'human', icon:'trash',  tag:'t&t', title:'Track &amp; trace wissen', desc:'Handmatig verwijderen'},
+    {id:'human',x:296, y:248, w:288, h:92,  kind:'human', icon:'user',   tag:'per BV', title:'Controle &amp; sorteren', items:['Oogwereld','Eyecatcher','overige BV’s'], dot:1},
+    {id:'cap',  x:60,  y:430, w:252, h:100, kind:'human', icon:'scan',   tag:'', title:'Handmatig scannen', desc:'Zelf inscannen', dot:1},
+    {id:'rem',  x:412, y:434, w:232, h:92,  kind:'human', icon:'cut',    tag:'', title:'Pagina’s opschonen', desc:'Met de hand verwijderen'},
+    {id:'fill', x:712, y:434, w:194, h:92,  kind:'human', icon:'pen',    tag:'', title:'Velden overtypen', desc:'Zelf intikken'},
+    {id:'push', x:990, y:434, w:152, h:92,  kind:'human', icon:'push',   tag:'', title:'Doorzetten', desc:'Met de hand'},
+    {id:'easy', x:990, y:626, w:212, h:96,  kind:'',      icon:'ledger', tag:'', title:'Easy Invoice', desc:'Handmatig invoeren', dot:1},
+    {id:'trbl', x:60,  y:600, w:620, h:132, kind:'human', icon:'wrench', tag:'troubleshooting', title:'Troubleshooting', items:['Vrachtkosten','Onderdelen · veren, fronts, neuspads','Milieubijdrage','Overige toeslagen','Overig']}
+  ],
+  ai: [
+    {id:'mail', x:60,  y:96,  w:212, h:92,  kind:'',      icon:'mail',   tag:'', title:'Factuur-mailbox', desc:'Inkomende facturen', dot:1},
+    {id:'ai',   x:384, y:84,  w:252, h:112, kind:'ai',    icon:'ai',     tag:'Claude', title:'AI @ oogwereld.nl', desc:'Leest · classificeert · cowork', dot:1},
+    {id:'filt', x:744, y:96,  w:166, h:92,  kind:'ai',    icon:'filter', tag:'auto', title:'Filters', desc:'Routeren per type', dot:1},
+    {id:'auto', x:1004,y:40,  w:210, h:80,  kind:'',      icon:'reply',  tag:'herinnering', title:'Antwoord: verkeerde mailbox', desc:'Mail terug aan afzender'},
+    {id:'arch', x:1004,y:130, w:210, h:74,  kind:'',      icon:'archive',tag:'pakbon', title:'Archiveren', desc:'Pakbonnen e.d. → archiefmap'},
+    {id:'del',  x:1004,y:214, w:210, h:74,  kind:'',      icon:'trash',  tag:'t&t', title:'Verwijderen', desc:'Track &amp; trace'},
+    {id:'human',x:296, y:248, w:288, h:92,  kind:'human', icon:'user',   tag:'per BV', title:'Controle &amp; sorteren', items:['Oogwereld','Eyecatcher','overige BV’s'], dot:1},
+    {id:'cap',  x:60,  y:430, w:252, h:100, kind:'ai',    icon:'scan',   tag:'auto', title:'Image Capture', desc:'Windows-server', dot:1},
+    {id:'rem',  x:412, y:434, w:232, h:92,  kind:'ai',    icon:'cut',    tag:'', title:'Pagina’s verwijderen', desc:'Scan opschonen'},
+    {id:'fill', x:712, y:434, w:194, h:92,  kind:'ai',    icon:'pen',    tag:'', title:'Extra’s invullen', desc:'Velden aanvullen'},
+    {id:'push', x:990, y:434, w:152, h:92,  kind:'ai',    icon:'push',   tag:'', title:'Doorzetten', desc:'Vastleggen'},
+    {id:'easy', x:990, y:626, w:212, h:96,  kind:'',      icon:'ledger', tag:'', title:'Easy Invoice', desc:'Boekhoudsysteem', dot:1},
+    {id:'trbl', x:60,  y:600, w:620, h:132, kind:'human', icon:'wrench', tag:'troubleshooting', title:'Troubleshooting', items:['Vrachtkosten','Onderdelen · veren, fronts, neuspads','Milieubijdrage','Overige toeslagen','Overig']}
+  ]
+};
 
 const EDGES = [
   {f:'mail', fs:'r', t:'ai',   ts:'l', c:'sig'},
@@ -438,7 +506,7 @@ const EDGES = [
   {f:'trbl', fs:'l', t:'cap',  ts:'b', c:'fb'}
 ];
 
-const map = Object.fromEntries(NODES.map(n=>[n.id,n]));
+let map={};
 function anchor(n,s){
   const cx=n.x+n.w/2, cy=n.y+n.h/2;
   if(s==='r') return {x:n.x+n.w, y:cy, nx:1, ny:0};
@@ -455,38 +523,62 @@ function pathFor(e){
   return `M ${a.x} ${a.y} C ${c1.x} ${c1.y} ${c2.x} ${c2.y} ${b.x} ${b.y}`;
 }
 
-// build nodes
-const nodesEl=document.getElementById('nodes');
-NODES.forEach((n,i)=>{
-  const el=document.createElement('div');
-  el.className='node '+(n.kind||'');
-  el.style.cssText=`left:${n.x}px;top:${n.y}px;width:${n.w}px;min-height:${n.h}px;animation-delay:${.15+i*.07}s`;
-  el.innerHTML=`
-    ${n.tag?`<span class="tag">${n.tag}</span>`:''}
-    <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${ICONS[n.icon]}</svg></div>
-    <div class="meta"><div class="title">${n.title}</div><div class="desc">${n.desc}</div></div>
-    ${n.dot?'<span class="dot"></span>':''}`;
-  nodesEl.appendChild(el);
-});
+// stap-banen (statisch)
+document.getElementById('bands').innerHTML = STEPS.map(s=>
+  `<div class="band ${s.cls}" style="left:${s.x}px;top:${s.y}px;width:${s.w}px;height:${s.h}px"><span class="blabel">${s.label}</span></div>`).join('');
 
-// build links
+const nodesEl=document.getElementById('nodes');
 const svg=document.getElementById('links');
-let defs=`<defs><filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+const defs=`<defs><filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
   <feGaussianBlur stdDeviation="1.4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>`;
-let base='', flow='', parts='';
-EDGES.forEach((e,i)=>{
-  const d=pathFor(e), pid='p'+i;
-  base+=`<path class="flowbase" d="${d}"/>`;
-  flow+=`<path id="${pid}" class="flow ${e.c} ${e.c!=='fb'?'dashmove':''}" d="${d}"/>`;
-  if(e.c!=='fb'){
-    const col=e.c==='hum'?'var(--human)':'var(--signal)';
-    const dur=(3.0+ (i%4)*0.45).toFixed(2);
-    parts+=`<circle class="particle" r="3" fill="${col}">
-      <animateMotion dur="${dur}s" begin="${(-i*0.5).toFixed(2)}s" repeatCount="indefinite" rotate="auto">
-        <mpath href="#${pid}"/></animateMotion></circle>`;
-  }
+
+function renderFlow(key){
+  const nodes=FLOWS[key];
+  const manual=(key==='manual');
+  map=Object.fromEntries(nodes.map(n=>[n.id,n]));
+  // nodes
+  nodesEl.innerHTML='';
+  nodes.forEach((n,i)=>{
+    const el=document.createElement('div');
+    el.className='node '+(n.kind||'');
+    el.style.cssText=`left:${n.x}px;top:${n.y}px;width:${n.w}px;min-height:${n.h}px;animation-delay:${.05+i*.045}s`;
+    const body = n.items
+      ? `<div class="items">${n.items.map(it=>`<span class="pill">${it}</span>`).join('')}</div>`
+      : `<div class="desc">${n.desc}</div>`;
+    el.innerHTML=`${n.tag?`<span class="tag">${n.tag}</span>`:''}
+      <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${ICONS[n.icon]}</svg></div>
+      <div class="meta"><div class="title">${n.title}</div>${body}</div>
+      ${n.dot?'<span class="dot"></span>':''}`;
+    nodesEl.appendChild(el);
+  });
+  // links — in de handmatige flow is alles een menselijke stap (teal)
+  let base='', flow='', parts='';
+  EDGES.forEach((e,i)=>{
+    const d=pathFor(e), pid='p'+key+i;
+    const c = e.c==='fb' ? 'fb' : (manual ? 'hum' : e.c);
+    base+=`<path class="flowbase" d="${d}"/>`;
+    flow+=`<path id="${pid}" class="flow ${c} ${c!=='fb'?'dashmove':''}" d="${d}"/>`;
+    if(c!=='fb'){
+      const col=c==='hum'?'var(--human)':'var(--signal)';
+      const dur=(3.0+ (i%4)*0.45).toFixed(2);
+      parts+=`<circle class="particle" r="3" fill="${col}">
+        <animateMotion dur="${dur}s" begin="${(-i*0.5).toFixed(2)}s" repeatCount="indefinite" rotate="auto">
+          <mpath href="#${pid}"/></animateMotion></circle>`;
+    }
+  });
+  svg.innerHTML=defs+base+flow+parts;
+}
+
+// toggle huidig ↔ AI
+let current='manual';
+renderFlow(current);
+document.getElementById('flowtoggle').addEventListener('click',ev=>{
+  const b=ev.target.closest('button'); if(!b) return;
+  const key=b.dataset.flow; if(key===current) return;
+  current=key;
+  document.querySelectorAll('#flowtoggle button').forEach(x=>x.classList.toggle('active', x.dataset.flow===key));
+  renderFlow(key);
 });
-svg.innerHTML=defs+base+flow+parts;
 
 // scale board to viewport
 function fit(){
